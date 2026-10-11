@@ -292,7 +292,7 @@ class InteractiveShell:
         try:
             await it(WrapperManager).login(username, password, self.on_2fa)
         except WrapperManagerException as e:
-            it(GlobalLogger).logger.error("Login Failed!")
+            it(GlobalLogger).logger.error(f"Login Failed! Reason: {e.msg}")
             return
         it(GlobalLogger).logger.info("Login Success!")
         it(WrapperManager).status.cache_invalidate()

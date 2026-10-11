@@ -203,6 +203,9 @@ def get_song_name_and_dir_path(codec: str, metadata, playlist: PlaylistInfo = No
     if playlist:
         safe_meta = get_path_safe_dict(metadata.model_dump())
         safe_pl_meta = get_path_safe_dict(playlist_metadata_to_params(playlist))
+        # Extract year from album_created (format: YYYY-MM-DD)
+        if metadata.album_created:
+            safe_meta['year'] = metadata.album_created[:4]
         song_name = it(Config).download.playlistSongNameFormat.format(codec=codec,
                                                                       playlistSongIndex=metadata.playlist_index,
                                                                       audio_info=get_audio_info_str(metadata, codec),
@@ -212,6 +215,9 @@ def get_song_name_and_dir_path(codec: str, metadata, playlist: PlaylistInfo = No
         dir_path = Path(it(Config).download.playlistDirPathFormat.format(codec=codec, **safe_meta, **safe_pl_meta))
     else:
         safe_meta = get_path_safe_dict(metadata.model_dump())
+        # Extract year from album_created (format: YYYY-MM-DD)
+        if metadata.album_created:
+            safe_meta['year'] = metadata.album_created[:4]
         song_name = it(Config).download.songNameFormat.format(codec=codec,
                                                               total_tracks=metadata.track_total[metadata.disk],
                                                               total_disks=metadata.disk_total,
